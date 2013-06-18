@@ -16,9 +16,11 @@ import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
 
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -36,6 +38,8 @@ private final String Tag2="Main Activity";
 	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Button playButton = (Button) findViewById(R.id.call_button);
+	    playButton.setVisibility(View.INVISIBLE);
 		//new PopulateHighScoresTask().execute();
 		Log.i(Tag2,"And I'm outta there");
 		Button myButton=(Button)findViewById(R.id.searchButton);
@@ -65,6 +69,20 @@ private final String Tag2="Main Activity";
 		v4.setText(ob2.ph);
 		v5.setText(ob2.email);*/
 	}
+	public void call(View v) {
+	    try {
+	        Intent callIntent = new Intent(Intent.ACTION_CALL);
+	        TextView vx=(TextView)findViewById(R.id.textView4);
+	        String s=vx.getText().toString();
+	        s="tel:"+s;
+	        
+	        callIntent.setData(Uri.parse(s));
+	        startActivity(callIntent);
+	        //s="";
+	    } catch (Exception e) {
+	         Log.e("helloandroid dialing example", "Call failed", e);
+	    }
+	}
 	public void pubo(Param ob2)
 	{
 		TextView v1=(TextView)findViewById(R.id.textView1);
@@ -77,6 +95,8 @@ private final String Tag2="Main Activity";
 		v3.setText(ob2.desi);
 		v4.setText(ob2.ph);
 		v5.setText(ob2.email);
+		Button playButton = (Button) findViewById(R.id.call_button);
+	    playButton.setVisibility(View.VISIBLE);
 	}
 	 
 

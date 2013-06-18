@@ -19,5 +19,6 @@
         <string name="contact">Add Contact</string>
         <string name="ent">Enter name</string>
         <string name="idx">Enter ID</string>
+        <string name="call">Call</string>
         
 </resources>
