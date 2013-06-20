@@ -27,6 +27,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	
+	ListView listView;
 private final String Tag2="Main Activity";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ private final String Tag2="Main Activity";
 		//new PopulateHighScoresTask().execute();
 		Log.i(Tag2,"And I'm outta there");
 		Button myButton=(Button)findViewById(R.id.searchButton);
-		
+		//listView.setOnItemClickListener(new ListClickHandler());
 		
 			//sdbClient.createDomain( cdr );
 
@@ -91,7 +93,7 @@ private final String Tag2="Main Activity";
 	{
 		int i=ob3.size();int j=0;
 		String arr[]=new String[i];
-		ListView listView=(ListView)findViewById(R.id.listView);
+		 listView=(ListView)findViewById(R.id.listView);
 		/*TextView v1=(TextView)findViewById(R.id.textView1);
 		TextView v2=(TextView)findViewById(R.id.textView2);
 		TextView v3=(TextView)findViewById(R.id.textView3);
@@ -105,11 +107,12 @@ private final String Tag2="Main Activity";
 		}
 		ArrayAdapter<String>adapter=new ArrayAdapter<String>(this,R.layout.list_element,R.id.list_item,arr);
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new ListClickHandler());
 		Log.i("Dash", "Aa gaya main yahan bhi (Y)");
 		
 		
-		Button playButton = (Button) findViewById(R.id.call_button);
-	    playButton.setVisibility(View.VISIBLE);
+		//Button playButton = (Button) findViewById(R.id.call_button);
+	    //playButton.setVisibility(View.VISIBLE);
 	}
 	 
 
@@ -121,7 +124,40 @@ private final String Tag2="Main Activity";
 	}
 
 
+private class ListClickHandler implements OnItemClickListener
+{
 
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+		Log.i("Dash", "Aa gaya main yahan3 (inside if)");
+		TextView listText=(TextView)view.findViewById(R.id.list_item);
+		String num=listText.getText().toString();
+		String s="";
+		int len=num.length();
+		for(int i=0;i<len;i++)
+		{
+			
+			char z=num.charAt(i);
+			if((z=='0')||(z=='1')||(z=='2')||(z=='3')||(z=='4')||(z=='5')||(z=='6')||
+					(z=='7')||(z=='8')||(z=='9'))//||(z=='7)||(z=='8')||(z=='9'))
+			{s=num.substring(i);Log.i("Dash", "Aa gaya main yahan3 (inside if)");break;}
+		}
+		
+		 try {
+		        Intent callIntent = new Intent(Intent.ACTION_CALL);
+		       s="tel:"+s;
+		        
+		        callIntent.setData(Uri.parse(s));
+		        startActivity(callIntent);
+		        
+		    } catch (Exception e) {
+		         Log.e("helloandroid dialing example", "Call failed", e);
+		    }
+		
+		
+	}
+	
+}
 
 
 
