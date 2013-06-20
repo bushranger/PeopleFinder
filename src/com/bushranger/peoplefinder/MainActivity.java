@@ -27,8 +27,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -73,8 +75,9 @@ private final String Tag2="Main Activity";
 	public void call(View v) {
 	    try {
 	        Intent callIntent = new Intent(Intent.ACTION_CALL);
-	        TextView vx=(TextView)findViewById(R.id.textView4);
-	        String s=vx.getText().toString();
+	        //TextView vx=(TextView)findViewById(R.id.textView4);
+	        //String s=vx.getText().toString();
+	       String s="abc";
 	        s="tel:"+s;
 	        
 	        callIntent.setData(Uri.parse(s));
@@ -86,20 +89,25 @@ private final String Tag2="Main Activity";
 	}
 	public void pubo(List<Param> ob3)
 	{
-		TextView v1=(TextView)findViewById(R.id.textView1);
+		int i=ob3.size();int j=0;
+		String arr[]=new String[i];
+		ListView listView=(ListView)findViewById(R.id.listView);
+		/*TextView v1=(TextView)findViewById(R.id.textView1);
 		TextView v2=(TextView)findViewById(R.id.textView2);
 		TextView v3=(TextView)findViewById(R.id.textView3);
 		TextView v4=(TextView)findViewById(R.id.textView4);
-		TextView v5=(TextView)findViewById(R.id.textView5);
+		TextView v5=(TextView)findViewById(R.id.textView5);*/
 		Log.i("Dash", "Aa gaya main yahan ()Y");
 		for ( Param ob2 : ob3 ) {
-		v1.setText(ob2.id);
-		v2.setText(ob2.name);
-		v3.setText(ob2.desi);
-		v4.setText(ob2.ph);
-		v5.setText(ob2.email);
+			arr[j]=ob2.name+"                              "+ob2.ph;j++;
+		
 		
 		}
+		ArrayAdapter<String>adapter=new ArrayAdapter<String>(this,R.layout.list_element,R.id.list_item,arr);
+		listView.setAdapter(adapter);
+		Log.i("Dash", "Aa gaya main yahan bhi (Y)");
+		
+		
 		Button playButton = (Button) findViewById(R.id.call_button);
 	    playButton.setVisibility(View.VISIBLE);
 	}
