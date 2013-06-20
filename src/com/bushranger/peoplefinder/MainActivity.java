@@ -10,6 +10,7 @@ import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 import com.amazonaws.services.simpledb.model.CreateDomainRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesRequest;
 import com.amazonaws.services.simpledb.model.GetAttributesResult;
+import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.PutAttributesRequest;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
@@ -83,18 +84,22 @@ private final String Tag2="Main Activity";
 	         Log.e("helloandroid dialing example", "Call failed", e);
 	    }
 	}
-	public void pubo(Param ob2)
+	public void pubo(List<Param> ob3)
 	{
 		TextView v1=(TextView)findViewById(R.id.textView1);
 		TextView v2=(TextView)findViewById(R.id.textView2);
 		TextView v3=(TextView)findViewById(R.id.textView3);
 		TextView v4=(TextView)findViewById(R.id.textView4);
 		TextView v5=(TextView)findViewById(R.id.textView5);
+		Log.i("Dash", "Aa gaya main yahan ()Y");
+		for ( Param ob2 : ob3 ) {
 		v1.setText(ob2.id);
 		v2.setText(ob2.name);
 		v3.setText(ob2.desi);
 		v4.setText(ob2.ph);
 		v5.setText(ob2.email);
+		
+		}
 		Button playButton = (Button) findViewById(R.id.call_button);
 	    playButton.setVisibility(View.VISIBLE);
 	}
@@ -114,7 +119,7 @@ private final String Tag2="Main Activity";
 
 
 
- private class Paramn extends AsyncTask<String, Void, Param>{
+ private class Paramn extends AsyncTask<String, Void, List<Param>>{
 	 private static final String APP_DOMAIN = "peoplefinder";
 		private static final String ID_ATTRIBUTE = "id";
 		private static final String NAME_ATTRIBUTE = "name";
@@ -124,18 +129,25 @@ private final String Tag2="Main Activity";
 		protected Param wht;
 		protected AmazonSimpleDBClient sdbClient;
 public String id,name,desi,ph,email;
-protected Param doInBackground(String... params) {
+protected List<Param> doInBackground(String... params) {
 	String ids=params[0];
 
-	wht=new Param();
+	
 	AWSCredentials credentials = new BasicAWSCredentials( Constants.ACCESS_KEY_ID, Constants.SECRET_KEY );
    this.sdbClient = new AmazonSimpleDBClient( credentials);
-   GetAttributesRequest gar = new GetAttributesRequest( APP_DOMAIN, ids );
-	GetAttributesResult response = this.sdbClient.getAttributes(gar);
-	//SelectRequest selectRequest = new SelectRequest( "select * from peoplefinder where id=ids " ).withConsistentRead( true );
-	//SelectResult response = this.sdbClient.select( selectRequest );
-
-	 List<Attribute> attributes=response.getAttributes();
+   //GetAttributesRequest gar = new GetAttributesRequest( APP_DOMAIN, ids );
+	//GetAttributesResult response = this.sdbClient.getAttributes(gar);
+	SelectRequest selectRequest = new SelectRequest( "select * from peoplefinder where name like'"+ids+"%'" ).withConsistentRead( true );
+	SelectResult response2 = this.sdbClient.select( selectRequest );
+	 List<Item> items=response2.getItems();
+	 int c=items.size();
+	 String h="Yeah these many"+c;
+	 Log.i("deva",h);
+	 List<Param> scores = new ArrayList<Param>( items.size() );
+	 
+	 for ( Item item : items ) {
+		 wht=new Param();
+	 List<Attribute> attributes=item.getAttributes();
 	for ( Attribute attribute : attributes ) {
 		if ( attribute.getName().equals( ID_ATTRIBUTE ) ) {
 			wht.id=attribute.getValue();
@@ -161,10 +173,12 @@ protected Param doInBackground(String... params) {
 			wht.email=attribute.getValue();
 		}
 	}
-	return wht;
+	scores.add(wht);
+	 }
+	return scores;
 	
 }
-protected void onPostExecute(Param obs){
+protected void onPostExecute(List<Param> obs){
 	pubo(obs);
 	
 }
