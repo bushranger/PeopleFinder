@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	ListView listView;
@@ -107,7 +108,58 @@ private final String Tag2="Main Activity";
 		}
 		ArrayAdapter<String>adapter=new ArrayAdapter<String>(this,R.layout.list_element,R.id.list_item,arr);
 		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new ListClickHandler());
+	    final SwipeDetector swipeDetector = new SwipeDetector();
+	    listView.setOnTouchListener(swipeDetector);
+		//listView.setOnItemClickListener(new ListClickHandler());
+	    listView.setOnItemClickListener(new OnItemClickListener() {
+
+
+	        @Override
+	        public void onItemClick(AdapterView <? > parent, View view,
+	            int position, long id) {
+
+	            if (swipeDetector.swipeDetected()) {
+	                if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+
+	                   
+	                	
+	                	Log.i("Dash", "Aa gaya main yahan3 (inside if)");
+	            		TextView listText=(TextView)view.findViewById(R.id.list_item);
+	            		String num=listText.getText().toString();
+	            		String s="";
+	            		int len=num.length();
+	            		for(int i=0;i<len;i++)
+	            		{
+	            			
+	            			char z=num.charAt(i);
+	            			if((z=='0')||(z=='1')||(z=='2')||(z=='3')||(z=='4')||(z=='5')||(z=='6')||
+	            					(z=='7')||(z=='8')||(z=='9'))//||(z=='7)||(z=='8')||(z=='9'))
+	            			{s=num.substring(i);Log.i("Dash", "Aa gaya main yahan3 (inside if)");break;}
+	            		}
+	            		
+	            		 try {
+	            		        Intent callIntent = new Intent(Intent.ACTION_CALL);
+	            		       s="tel:"+s;
+	            		        
+	            		        callIntent.setData(Uri.parse(s));
+	            		        startActivity(callIntent);
+	            		        
+	            		    } catch (Exception e) {
+	            		         Log.e("helloandroid dialing example", "Call failed", e);
+	            		    }
+	            		 
+	            		 
+	            		 
+	            		 
+
+	                }
+	                if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+
+	                  
+	                }
+	            }
+	        }
+	    });
 		Log.i("Dash", "Aa gaya main yahan bhi (Y)");
 		
 		
@@ -123,41 +175,6 @@ private final String Tag2="Main Activity";
 		return true;
 	}
 
-
-private class ListClickHandler implements OnItemClickListener
-{
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
-		Log.i("Dash", "Aa gaya main yahan3 (inside if)");
-		TextView listText=(TextView)view.findViewById(R.id.list_item);
-		String num=listText.getText().toString();
-		String s="";
-		int len=num.length();
-		for(int i=0;i<len;i++)
-		{
-			
-			char z=num.charAt(i);
-			if((z=='0')||(z=='1')||(z=='2')||(z=='3')||(z=='4')||(z=='5')||(z=='6')||
-					(z=='7')||(z=='8')||(z=='9'))//||(z=='7)||(z=='8')||(z=='9'))
-			{s=num.substring(i);Log.i("Dash", "Aa gaya main yahan3 (inside if)");break;}
-		}
-		
-		 try {
-		        Intent callIntent = new Intent(Intent.ACTION_CALL);
-		       s="tel:"+s;
-		        
-		        callIntent.setData(Uri.parse(s));
-		        startActivity(callIntent);
-		        
-		    } catch (Exception e) {
-		         Log.e("helloandroid dialing example", "Call failed", e);
-		    }
-		
-		
-	}
-	
-}
 
 
 
