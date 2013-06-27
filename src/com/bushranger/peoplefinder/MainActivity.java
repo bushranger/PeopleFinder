@@ -20,9 +20,18 @@ import com.amazonaws.services.simpledb.model.SelectResult;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.RawContacts;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -119,24 +128,29 @@ private final String Tag2="Main Activity";
 	            int position, long id) {
 
 	            if (swipeDetector.swipeDetected()) {
+	            	TextView listText=(TextView)view.findViewById(R.id.list_item);
+            		String num=listText.getText().toString();
+            		String s="";String s2="";
+            		int len=num.length();
+            		for(int i=0;i<len;i++)
+            		{
+            			
+            			char z=num.charAt(i);
+            			if((z==' ')&&(num.charAt(i-1)==' '))
+            					{
+            				s2=num.substring(0,i-1);
+            					}
+            			if((z=='0')||(z=='1')||(z=='2')||(z=='3')||(z=='4')||(z=='5')||(z=='6')||
+            					(z=='7')||(z=='8')||(z=='9'))//||(z=='7)||(z=='8')||(z=='9'))
+            			{s=num.substring(i);Log.i("Dash", "Aa gaya main yahan3 (inside if)");break;}
+            		}
+
 	                if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
 
 	                   
 	                	
 	                	Log.i("Dash", "Aa gaya main yahan3 (inside if)");
-	            		TextView listText=(TextView)view.findViewById(R.id.list_item);
-	            		String num=listText.getText().toString();
-	            		String s="";
-	            		int len=num.length();
-	            		for(int i=0;i<len;i++)
-	            		{
-	            			
-	            			char z=num.charAt(i);
-	            			if((z=='0')||(z=='1')||(z=='2')||(z=='3')||(z=='4')||(z=='5')||(z=='6')||
-	            					(z=='7')||(z=='8')||(z=='9'))//||(z=='7)||(z=='8')||(z=='9'))
-	            			{s=num.substring(i);Log.i("Dash", "Aa gaya main yahan3 (inside if)");break;}
-	            		}
-	            		
+	            			            		
 	            		 try {
 	            		        Intent callIntent = new Intent(Intent.ACTION_CALL);
 	            		       s="tel:"+s;
@@ -154,7 +168,37 @@ private final String Tag2="Main Activity";
 
 	                }
 	                if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+	                	ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+	                    int rawContactInsertIndex = ops.size();
 
+	                    ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+	                            .withValue(RawContacts.ACCOUNT_TYPE, null)
+	                            .withValue(RawContacts.ACCOUNT_NAME, null).build());
+	                    ops.add(ContentProviderOperation
+	                            .newInsert(Data.CONTENT_URI)
+	                            .withValueBackReference(Data.RAW_CONTACT_ID,rawContactInsertIndex)
+	                            .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
+	                            .withValue(StructuredName.DISPLAY_NAME, s2) // Name of the person
+	                            .build());
+	                    ops.add(ContentProviderOperation
+	                            .newInsert(Data.CONTENT_URI)
+	                            .withValueBackReference(
+	                                    ContactsContract.Data.RAW_CONTACT_ID,   rawContactInsertIndex)
+	                            .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+	                            .withValue(Phone.NUMBER, s) // Number of the person
+	                            .withValue(Phone.TYPE, Phone.TYPE_MOBILE).build()); // Type of mobile number                    
+	                    try
+	                    {
+	                        ContentProviderResult[] res = getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+	                    }
+	                    catch (RemoteException e)
+	                    { 
+	                        // error
+	                    }
+	                    catch (OperationApplicationException e) 
+	                    {
+	                        // error
+	                    }  
 	                  
 	                }
 	            }
