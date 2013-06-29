@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 public class List_display extends Activity {
 
 	@Override
@@ -43,10 +44,11 @@ public class List_display extends Activity {
         obj.ph=x4.getText().toString();
         obj.email=x5.getText().toString();
         new AddContactMethod().execute(obj);
+        Toast.makeText(getApplicationContext(), "contacts added to database", Toast.LENGTH_SHORT).show();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+		
 		getMenuInflater().inflate(R.menu.list_display, menu);
 		return true;
 	}
@@ -54,7 +56,7 @@ public class List_display extends Activity {
 }
 
  class AddContactMethod extends AsyncTask<Param, Void, Void> {
-	 //String message="Hello baba";String str;String str2="";
+	
 	 private final String TAG="Pop ";
 	 private static final String APP_DOMAIN = "peoplefinder";
 		private static final String ID_ATTRIBUTE = "id";
@@ -69,7 +71,7 @@ public class List_display extends Activity {
 		    this.sdbClient = new AmazonSimpleDBClient( credentials); 
            Log.i(TAG,"after creating client");
 		    CreateDomainRequest cdr = new CreateDomainRequest( APP_DOMAIN );
-			this.sdbClient.createDomain( cdr );
+			this.sdbClient.createDomain( cdr ); 
 			
 			
 			ReplaceableAttribute idAttribute = new ReplaceableAttribute( ID_ATTRIBUTE,s.id,Boolean.TRUE );
@@ -90,6 +92,7 @@ public class List_display extends Activity {
 			PutAttributesRequest par = new PutAttributesRequest( APP_DOMAIN, s.id, attrs);		
 			try {
 				this.sdbClient.putAttributes( par );
+				
 			}
 			catch ( Exception exception ) {
 				System.out.println( "EXCEPTION = " + exception );
@@ -101,8 +104,7 @@ public class List_display extends Activity {
 
 
 
-              // Log.i(TAG,);
-
+            
          
 
 			return null;

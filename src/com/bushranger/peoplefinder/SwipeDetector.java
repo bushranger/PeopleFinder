@@ -8,27 +8,21 @@ import android.view.View.OnTouchListener;
 
 
 
-/**
- * Class swipe detection to View
- */
+
 public class SwipeDetector implements View.OnTouchListener {
 
     public static enum Action {
-        LR, // Left to right
-        RL, // Right to left
-        TB, // Top to bottom
-        BT, // Bottom to top
-        None // Action not found
+        LR, 
+        RL, 
+        TB, 
+        BT, 
+        None 
     }
 
-    private static final int HORIZONTAL_MIN_DISTANCE = 30; // The minimum
-    // distance for
-    // horizontal swipe
-    private static final int VERTICAL_MIN_DISTANCE = 80; // The minimum distance
-    // for vertical
-    // swipe
-    private float downX, downY, upX, upY; // Coordinates
-    private Action mSwipeDetected = Action.None; // Last action
+    private static final int HORIZONTAL_MIN_DISTANCE = 30;
+    private static final int VERTICAL_MIN_DISTANCE = 80; 
+    private float downX, downY, upX, upY; 
+    private Action mSwipeDetected = Action.None;
 
     public boolean swipeDetected() {
         return mSwipeDetected != Action.None;
@@ -38,9 +32,7 @@ public class SwipeDetector implements View.OnTouchListener {
         return mSwipeDetected;
     }
 
-    /**
-     * Swipe detection
-     */
+   
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -49,7 +41,7 @@ public class SwipeDetector implements View.OnTouchListener {
                 downX = event.getX();
                 downY = event.getY();
                 mSwipeDetected = Action.None;
-                return false; // allow other events like Click to be processed
+                return false; 
             }
         case MotionEvent.ACTION_MOVE:
             {
@@ -59,9 +51,9 @@ public class SwipeDetector implements View.OnTouchListener {
                 float deltaX = downX - upX;
                 float deltaY = downY - upY;
 
-                // horizontal swipe detection
+                
                 if (Math.abs(deltaX) > HORIZONTAL_MIN_DISTANCE) {
-                    // left or right
+                   
                     if (deltaX < 0) {
 
                         mSwipeDetected = Action.LR;
@@ -74,9 +66,9 @@ public class SwipeDetector implements View.OnTouchListener {
                     }
                 } else
 
-                // vertical swipe detection
+              
                 if (Math.abs(deltaY) > VERTICAL_MIN_DISTANCE) {
-                    // top or down
+                   
                     if (deltaY < 0) {
 
                         mSwipeDetected = Action.TB;
