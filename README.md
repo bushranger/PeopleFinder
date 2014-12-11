@@ -22,4 +22,8 @@ Batch method is used to insert the raw contact and its constituent data rows in 
 This feature can be used by swiping the list item from right to left
 After the contact has been successfully added, a toast notifies the same
 
+========================================================================
+
+Please download the PeopleFinder.apk file located here- https://github.com/sagar-sinha/PeopleFinder/blob/master/bin/PeopleFinder.apk
+
 
